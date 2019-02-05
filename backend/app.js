@@ -1,7 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const Post = require('./models/post');  //getting the post model
 
 const app = express();
+
+mongoose.connect("mongodb+srv://aneesh:eU2BPdw8ShnPWk6E@cluster0-itlw5.mongodb.net/test?retryWrites=true")
+  .then(() => {
+    console.log('Contented to database!');
+  })
+  .catch(() => {
+    console.log('Connection failed!');
+  })
 
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: false })); // to parse url encoded data
@@ -19,7 +30,10 @@ app.use((req, res, next) => {
 });
 //eU2BPdw8ShnPWk6E
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });  //need to pass in a javascript object that constains the data
   console.log(post);
   res.status(201).json({
     message: "Post added successfully!"
